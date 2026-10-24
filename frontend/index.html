@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Shorten</h1>
+    <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <form id="shorten-form" class="shorten-form">
+        <div class="input-group">
+          <input type="url" id="url-input" placeholder="Paste a long URL here..." required aria-label="URL to shorten" autocomplete="off">
+          <button type="submit" id="shorten-btn">Shorten</button>
+        </div>
+        <details class="advanced">
+          <summary>Advanced options</summary>
+          <div class="options">
+            <input type="text" id="alias-input" placeholder="Custom alias (optional)" maxlength="30">
+            <select id="expires-select">
+              <option value="">No expiration</option>
+              <option value="1h">1 hour</option>
+              <option value="24h">24 hours</option>
+              <option value="7d">7 days</option>
+              <option value="30d">30 days</option>
+            </select>
+            <input type="password" id="password-input" placeholder="Password (optional)">
+            <input type="text" id="tags-input" placeholder="Tags (comma separated)">
+          </div>
+        </details>
+      </form>
+      <div id="result" class="result hidden" aria-live="polite"></div>
+    </section>
+
+    <section class="bulk">
+      <h2>Bulk Shorten</h2>
+      <p>Paste multiple URLs (one per line, max 50)</p>
+      <textarea id="bulk-input" rows="6" placeholder="https://example.com/page1\nhttps://example.com/page2\nhttps://example.com/page3"></textarea>
+      <button id="bulk-btn">Shorten All</button>
+      <div id="bulk-results" class="bulk-results"></div>
+    </section>
+
+    <section class="history">
+      <h2>Your Links</h2>
+      <div class="history-controls">
+        <input type="search" id="search-input" placeholder="Search by URL, alias or tags..." aria-label="Search links">
+        <select id="filter-status">
+          <option value="all">All statuses</option>
+          <option value="active">Active</option>
+          <option value="expired">Expired</option>
+          <option value="protected">Password protected</option>
+        </select>
+        <select id="sort-by">
+          <option value="created-desc">Newest first</option>
+          <option value="created-asc">Oldest first</option>
+          <option value="clicks-desc">Most clicks</option>
+          <option value="clicks-asc">Fewest clicks</option>
+          <option value="alias-asc">Alias A–Z</option>
+          <option value="alias-desc">Alias Z–A</option>
+        </select>
+      </div>
+      <div id="links-container"></div>
+      <div id="no-results" class="hidden" style="text-align:center;color:#888;padding:2rem;">No links match your filters.</div>
+    </section>
+
+    <div id="analytics-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="analytics-title">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="analytics-title">Analytics</h2>
+          <button id="close-analytics" aria-label="Close">&times;</button>
+        </div>
+        <div class="range-selector">
+          <button data-range="24h">24h</button>
+          <button data-range="7d" class="active">7d</button>
+          <button data-range="30d">30d</button>
+          <button data-range="90d">90d</button>
+          <button data-range="all">All</button>
+        </div>
+        <div id="analytics-body">
+          <div class="stats-row">
+            <div class="stat"><span id="stat-total">0</span><small>Total clicks</small></div>
+            <div class="stat"><span id="stat-unique">0</span><small>Unique</small></div>
+          </div>
+          <canvas id="timeline-chart" height="120"></canvas>
+          <div class="charts-grid">
+            <div><h3>Devices</h3><canvas id="devices-chart"></canvas></div>
+            <div><h3>Browsers</h3><canvas id="browsers-chart"></canvas></div>
+            <div><h3>Countries</h3><canvas id="countries-chart"></canvas></div>
+            <div><h3>Referrers</h3><canvas id="referrers-chart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
